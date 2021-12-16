@@ -1,0 +1,27 @@
+{
+  "name": "apiimmo",
+  "version": "1.0.0",
+  "description": "evaluation 1 : création d'une api rest de gestion de l'immobilier",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "reset": "sequelize db:drop && sequelize db:create && sequelize db:migrate && sequelize db:seed:all && nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StyveLioumba/apiImmo.git"
+  },
+  "author": "styve Lioumba",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/StyveLioumba/apiImmo/issues"
+  },
+  "homepage": "https://github.com/StyveLioumba/apiImmo#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.12.0-beta.3",
+    "sequelize-cli": "^6.3.0"
+  }
+}
