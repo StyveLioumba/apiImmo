@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "reset": "sequelize db:drop && sequelize db:create && sequelize db:migrate && sequelize db:seed:all && nodemon app.js"
+    "reset": "sequelize db:drop && sequelize db:create && sequelize db:migrate && sequelize db:seed:all",
+    "serve": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -18,8 +19,11 @@
   },
   "homepage": "https://github.com/StyveLioumba/apiImmo#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.4",
     "mysql2": "^2.3.3",
     "sequelize": "^6.12.0-beta.3",
     "sequelize-cli": "^6.3.0"
