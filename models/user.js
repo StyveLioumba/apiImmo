@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsToMany(models.Role,{
         through: models.UserRole
       });
+      User.hasMany(models.Advertisement);
     }
   };
   User.init({

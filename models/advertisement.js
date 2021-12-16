@@ -13,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Advertisement.belongsTo(models.Type);
 
+      Advertisement.belongsTo(models.User);
+
       Advertisement.hasMany(models.AdvertisementTag);
       Advertisement.belongsToMany(models.Tag,{
         through: models.AdvertisementTag

@@ -11,12 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      AdvertisementTag.belongsTo(models.Tag);
       AdvertisementTag.belongsTo(models.Advertisement);
+      AdvertisementTag.belongsTo(models.Tag);
     }
   };
   AdvertisementTag.init({
-    name: DataTypes.STRING
+
   }, {
     sequelize,
     modelName: 'AdvertisementTag',

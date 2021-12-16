@@ -17,8 +17,12 @@ exports.addUser=(req,res,next)=>{
                 .then(result=>{
 
                     if (result && result!==false){
-                        let user = req.body;
-                        user.password = result;
+                        let user_data = req.body;
+                        user_data.password = result;
+
+                        if(req.file){
+                            user_data.picture =`public/upload/gift/${req.file.filename}`
+                        }
 
                         User.create(req.body)
                             .then(user => {
@@ -27,6 +31,8 @@ exports.addUser=(req,res,next)=>{
                                         res.status(200).json({message:"user added",user})
                                     })
                             }).catch(erreur=>res.status(404).json({erreur}))
+
+
                     }else {
                         res.status(404).json({message:"your password must have more than 7 character"})
                     }
@@ -95,13 +101,15 @@ exports.userLogin = (req, res, next) => {
                     res.status(500).end()
                 }
                 else if(result){
-                    const token = jwt.sign({name: user.name, email: user.email}, process.env.SECRET, { expiresIn:'1h'});
+                    const token = jwt.sign({name: user.name, email: user.email}, process.env.SECRET, { expiresIn:'2h'});
                     res.status(200).json({token: token});
                 }
                 else{
                     res.status(404).json({message: 'Bad login or password'});
                 }
             })
+        }else {
+            res.status(404).json({message: 'Bad login or password'});
         }
     }).catch( err => res.status(500).end())
 }
