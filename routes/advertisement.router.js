@@ -20,6 +20,8 @@ const storage = multer.diskStorage({
 const upload = multer({storage});
 
 router.post('/',auth(),upload.single('picture'),advertisement_controller.addAdvertisement);
+router.post('/tags/',auth(),advertisement_controller.addAdvertisement);
+router.post('/advantages/',auth(),advertisement_controller.addAdvertisement);
 router.get('/',advertisement_controller.allAdvertisement);
 router.get('/search/:q',advertisement_controller.searchAdvertisement);
 router.get('/:id',advertisement_controller.detailAdvertisement);

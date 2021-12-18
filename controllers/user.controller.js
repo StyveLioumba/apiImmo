@@ -21,7 +21,7 @@ exports.addUser=(req,res,next)=>{
                         user_data.password = result;
 
                         if(req.file){
-                            user_data.picture =`public/upload/gift/${req.file.filename}`
+                            user_data.picture =`upload/users/${req.file.filename}`
                         }
 
                         User.create(req.body)
@@ -83,7 +83,13 @@ exports.allUser=(req, res,next)=>{
 
 exports.detailUser = (req,res,next)=>{
     User.findByPk(req.params.id,{
-        attributes:attributes
+        attributes,
+        include:[
+            {
+                model:Role,
+                attributes:['id','name']
+            }
+        ]
     }).then(data=>{
         res.status(200).json({data})
     }).catch(erreur=>res.status(404).json({erreur}))
@@ -93,15 +99,25 @@ exports.userLogin = (req, res, next) => {
     User.findOne({
         where: {
             email: req.body.email
-        }
+        },
+        include:[
+            {
+                model:Role,
+                attributes:['id','name']
+            }
+        ]
     }).then(user => {
+        console.log(`le role name : ${ user}`)
         if(user){
             bcrypt.compare(req.body.password, user.password, (err, result) => {
                 if(err){
                     res.status(500).end()
                 }
                 else if(result){
-                    const token = jwt.sign({name: user.name, email: user.email}, process.env.SECRET, { expiresIn:'2h'});
+                    const token = jwt.sign({
+                        name: user.name,
+                        email: user.email
+                    }, process.env.SECRET, { expiresIn:'2h'});
                     res.status(200).json({token: token});
                 }
                 else{

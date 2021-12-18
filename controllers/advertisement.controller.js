@@ -3,6 +3,8 @@ const User = require('../models').User;
 const Type = require('../models').Type;
 const Tag = require('../models').Tag;
 const Advantage = require('../models').Advantage;
+const AdvertisementTag = require('../models').AdvertisementTag;
+const AdvertisementAvantage = require('../models').AdvertisementAdvantage
 
 const {Op} =require('sequelize');
 
@@ -15,16 +17,16 @@ exports.addAdvertisement = (req,res,next)=>{
                 if (advantage){
                     let adveertisement = req.body;
                     if(req.file){
-                        adveertisement.picture =`public/upload/gift/${req.file.filename}`
+                        adveertisement.picture =`upload/advertisement/${req.file.filename}`
                     }
                     Advertisement.create(req.body).then(advertisement=>{
                         advertisement.setTags(req.body.tag)
                             .then(()=> {
                                 advertisement.setAdvantages(req.body.advantage)
                                     .then(()=> res.status(200).json({message:"advertisement added",advertisement}))
-                                    .catch(err=>console.log(err))
-                            }).catch(err=>console.log(err))
-                    }).catch(erreur=>res.status(400).json({erreur:erreur}));
+                                    .catch(error=>console.log(error))
+                            }).catch(error=>console.log(error))
+                    }).catch(error=>res.status(400).json({error}));
                 }else {
                     res.status(404).json({message:'advantage not found'})
                 }
@@ -36,11 +38,53 @@ exports.addAdvertisement = (req,res,next)=>{
 
 }
 
+exports.addTag = (req,res,next)=>{
+    Tag.findByPk(req.body.tag).then(tag=>{
+        if (tag){
+            AdvertisementTag.create(req.body)
+                .then(data=>res.status(200).json({data}))
+                .catch(error=>res.status(400).json({error}))
+        }else {
+            res.status(401).json({message:"tag not found"})
+        }
+    }).catch(error=>res.status(400).json({error}))
+}
+
+exports.addAdvantage = (req,res,next)=>{
+    Advantage.findByPk(req.body.advantage).then(advantage=>{
+        if (advantage){
+            AdvertisementAvantage.create(req.body)
+                .then(data=>res.status(200).json({data}))
+                .catch(error=>res.status(400).json({error}))
+        }else {
+            res.status(401).json({message:"tag not found"})
+        }
+    }).catch(error=>res.status(400).json({error}))
+}
+
 exports.detailAdvertisement =(req,res,next)=>{
     Advertisement.findByPk(req.params.id,{
-        attributes
+        attributes,
+        include:[
+            {
+                model:User,
+                attributes:['id','name','age','email','phone','picture']
+            },
+            {
+                model:Type,
+                attributes:['id','name']
+            },
+            {
+                model:Advantage,
+                attributes:['id','name']
+            },
+            {
+                model:Tag,
+                attributes:['id','name']
+            }
+        ]
     }).then(data=>res.status(200).json({data}))
-        .catch(erreur=>res.status(400).json(erreur))
+        .catch(error=>res.status(400).json(error))
 }
 
 exports.updateAdvertisement =(req,res,next)=>{
@@ -49,7 +93,7 @@ exports.updateAdvertisement =(req,res,next)=>{
             id:req.params.id
         }
     }).then(()=>res.status(200).json({message:"advertisement updated"}))
-        .catch(erreur=>res.status(400).json(erreur))
+        .catch(error=>res.status(400).json(error))
 }
 
 exports.deleteAdvertisement =(req,res,next)=>{
@@ -58,7 +102,7 @@ exports.deleteAdvertisement =(req,res,next)=>{
             id:req.params.id
         }
     }).then(()=>res.status(200).json({message:"advertisement deleted"}))
-        .catch(erreur=>res.status(400).json(erreur))
+        .catch(error=>res.status(400).json(error))
 }
 
 exports.allAdvertisement =(req,res,next)=>{
@@ -84,7 +128,7 @@ exports.allAdvertisement =(req,res,next)=>{
         ]
     }).then(data=>{
         res.status(200).json({data})
-    }).catch(erreur=>res.status(400).json({erreur}));
+    }).catch(error=>res.status(400).json({error}));
 }
 
 
